@@ -7,10 +7,13 @@ import org.json.simple.JSONObject;
 
 import java.util.*;
 
+import static exit_errors.ExitErrors.*;
+
 public class JsonOECDParser {
 
     private JSONObject jsonFile;
     private List<Area> areaList;
+    private final static String NO_AREAS_IN_FILE = "No areas in input file.";
 
     public JsonOECDParser(JSONObject jsonFile) {
         this.jsonFile = jsonFile;
@@ -28,8 +31,7 @@ public class JsonOECDParser {
         try {
             dimensionEntry = (JSONObject) jsonFile.get("dimension");
         } catch (NullPointerException e) {
-            System.err.println(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorMsg());
-            System.exit(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorCode());
+            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
         }
 
         createAreas(dimensionEntry);
@@ -37,7 +39,6 @@ public class JsonOECDParser {
         fillAreaUnemploymentRates(dimensionEntry);
 
         sortUnemploymentListsByValue();
-
     }
 
     private void sortUnemploymentListsByValue() {
@@ -53,8 +54,7 @@ public class JsonOECDParser {
             JSONObject areaEntry = (JSONObject) dimensionEntry.get("area");
             areaCategoryEntry = (JSONObject) areaEntry.get("category");
         } catch (NullPointerException e) {
-            System.err.println(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorMsg());
-            System.exit(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorCode());
+            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
         }
         retrieveAreasFromCategory(areaCategoryEntry);
     }
@@ -64,11 +64,15 @@ public class JsonOECDParser {
         try {
             areaLabelEntry = (JSONObject) areaCategoryEntry.get("label");
         } catch (NullPointerException e) {
-            System.err.println(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorMsg());
-            System.exit(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorCode());
+            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
         }
 
         final JSONObject finalAreaLabelEntry = areaLabelEntry;
+        if(finalAreaLabelEntry.size() == 0) {
+            System.out.println(NO_AREAS_IN_FILE);
+            System.exit(0);
+        }
+
         areaLabelEntry.keySet().forEach(label -> {
             String name = (String) finalAreaLabelEntry.get(label);
             long index = findIndexOfLabel((String) label, areaCategoryEntry);
@@ -83,8 +87,7 @@ public class JsonOECDParser {
             JSONObject yearCategoryEntry = (JSONObject) yearEntry.get("category");
             indexEntry = (JSONObject) yearCategoryEntry.get("index");
         } catch (NullPointerException e) {
-            System.err.println(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorMsg());
-            System.exit(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorCode());
+            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
         }
 
         JsonRateProvider rateProvider = new JsonRateProvider(jsonFile);
@@ -104,8 +107,7 @@ public class JsonOECDParser {
         try {
           indexEntry = (JSONObject) areaCategoryEntry.get("index");
         } catch (NullPointerException e) {
-            System.err.println(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorMsg());
-            System.exit(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorCode());
+            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
         }
 
         return (long) indexEntry.get(label);

@@ -28,4 +28,9 @@ public enum ExitErrors {
     public String getErrorMsg() {
         return errorMsg;
     }
+
+    public static void exitWithErrCode(ExitErrors error) {
+        System.err.println(error.getErrorMsg());
+        System.exit(error.getErrorCode());
+    }
 }

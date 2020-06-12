@@ -9,7 +9,9 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class JsonDownloader {
+import static exit_errors.ExitErrors.*;
+
+public class JsonFileDownloader {
 
     public static JSONObject getJsonObjectFromUrl(String urlPath) {
         try {
@@ -20,14 +22,11 @@ public class JsonDownloader {
             return (JSONObject) new JSONParser().parse(reader);
 
         } catch (FileNotFoundException e) {
-            System.err.println(ExitErrors.FILE_NOT_FOUND.getErrorMsg());
-            System.exit(ExitErrors.FILE_NOT_FOUND.getErrorCode());
+            ExitErrors.exitWithErrCode(FILE_NOT_FOUND);
         } catch (ParseException e) {
-            System.err.println(ExitErrors.FILE_PARSING.getErrorMsg());
-            System.exit(ExitErrors.FILE_PARSING.getErrorCode());
+            ExitErrors.exitWithErrCode(FILE_PARSING);
         } catch (IOException e) {
-            System.err.println(ExitErrors.FILE_READING.getErrorMsg());
-            System.exit(ExitErrors.FILE_READING.getErrorCode());
+            ExitErrors.exitWithErrCode(FILE_READING);
         }
         return null;
     }

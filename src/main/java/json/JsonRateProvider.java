@@ -7,8 +7,11 @@ import org.json.simple.JSONObject;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import static exit_errors.ExitErrors.*;
+
 public class JsonRateProvider {
 
+    private final static String NO_VALUES_IN_FILE = "No areas in input file.";
     private JSONObject inputJsonFile;
     private LinkedList<Double> valuesList;
     private int currentValue;
@@ -25,10 +28,15 @@ public class JsonRateProvider {
         try {
             valuesArr = (JSONArray) inputJsonFile.get("value");
         } catch (NullPointerException e) {
-            System.err.println(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorMsg());
-            System.exit(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorCode());
+            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
+        }
+
+        if(valuesArr.size() == 0) {
+            System.out.println(NO_VALUES_IN_FILE);
+            System.exit(0);
         }
         Iterator i = valuesArr.iterator();
+
 
         while (i.hasNext()) {
             double next = (double) i.next();
@@ -40,8 +48,7 @@ public class JsonRateProvider {
         try {
             return valuesList.get(currentValue++);
         } catch (IndexOutOfBoundsException e) {
-            System.err.println(ExitErrors.NOT_ENOUGH_VALUES.getErrorMsg());
-            System.exit(ExitErrors.NOT_ENOUGH_VALUES.getErrorCode());
+            ExitErrors.exitWithErrCode(NOT_ENOUGH_VALUES);
         }
         return 0;
     }

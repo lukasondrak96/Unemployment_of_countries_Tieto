@@ -1,7 +1,7 @@
 import data.Area;
 import data.UnemploymentRate;
 
-import json.JsonDownloader;
+import json.JsonFileDownloader;
 import json.JsonOECDParser;
 import org.json.simple.JSONObject;
 
@@ -17,7 +17,7 @@ public class UnemploymentStatsWriter {
     private List<Area> areaList;
 
     public UnemploymentStatsWriter() {
-        JSONObject jsonObject = JsonDownloader.getJsonObjectFromUrl(URL);
+        JSONObject jsonObject = JsonFileDownloader.getJsonObjectFromUrl(URL);
         this.areaList = new JsonOECDParser(jsonObject).getAreaList();
     }
 
