@@ -1,8 +1,18 @@
-package data;
+package com.test.unemploymentstats.data;
 
+/**
+ * Class representing rate of unemployment in area.
+ */
 public class UnemploymentRate {
 
+    /**
+     * Year of rate entry
+     */
     private int year;
+
+    /**
+     * Unemployment rate in percentages
+     */
     private double rate;
 
     public int getYear() {

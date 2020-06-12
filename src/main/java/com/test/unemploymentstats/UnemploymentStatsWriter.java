@@ -1,19 +1,27 @@
-import data.Area;
-import data.UnemploymentRate;
+package com.test.unemploymentstats;
 
-import json.JsonFileDownloader;
-import json.JsonOECDParser;
+import com.test.unemploymentstats.data.Area;
+
+import com.test.unemploymentstats.data.UnemploymentRate;
+import com.test.unemploymentstats.json_processing.JsonFileDownloader;
+import com.test.unemploymentstats.json_processing.JsonOECDParser;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Main class - writer of stats of unemployemnt rate in areas.
+ */
 public class UnemploymentStatsWriter {
 
     private static final String URL = "https://json-stat.org/samples/oecd.json";
     private static final int COUNT_OF_AREAS_TO_WRITE = 3;
 
+    /**
+     * List of areas with rates
+     */
     private List<Area> areaList;
 
     public UnemploymentStatsWriter() {
@@ -92,7 +100,7 @@ public class UnemploymentStatsWriter {
 
             sb.append(order + ". "
                     + a.getName() +
-                    " (" + a.getLabel() + ") - " + unemplRate.getRate() + "%  " +
+                    " (" + a.getAreaCode() + ") - " + unemplRate.getRate() + "%  " +
                     "(" + unemplRate.getYear() + ")\n");
             order++;
         }

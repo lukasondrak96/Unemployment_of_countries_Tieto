@@ -1,24 +1,33 @@
-package json;
+package com.test.unemploymentstats.json_processing;
 
-import data.Area;
-import data.UnemploymentRate;
-import exit_errors.ExitErrors;
+import com.test.unemploymentstats.data.Area;
+import com.test.unemploymentstats.data.UnemploymentRate;
+import com.test.unemploymentstats.exit_errors.ExitErrors;
 import org.json.simple.JSONObject;
 
 import java.util.*;
 
-import static exit_errors.ExitErrors.*;
+import static com.test.unemploymentstats.exit_errors.ExitErrors.*;
 
+/**
+ * Parser of oecd file with com.test.unemploymentstats.json-stat format. Creates inner structure of areas and their rates in years.
+ */
 public class JsonOECDParser {
 
+    /**
+     * Input com.test.unemploymentstats.json file with com.test.unemploymentstats.data
+     */
     private JSONObject jsonFile;
+
+    /**
+     * List of areas with rates
+     */
     private List<Area> areaList;
     private final static String NO_AREAS_IN_FILE = "No areas in input file.";
 
     public JsonOECDParser(JSONObject jsonFile) {
         this.jsonFile = jsonFile;
         createListEntries();
-
     }
 
     public List<Area> getAreaList() {
@@ -68,7 +77,7 @@ public class JsonOECDParser {
         }
 
         final JSONObject finalAreaLabelEntry = areaLabelEntry;
-        if(finalAreaLabelEntry.size() == 0) {
+        if (finalAreaLabelEntry.size() == 0) {
             System.out.println(NO_AREAS_IN_FILE);
             System.exit(0);
         }
@@ -104,13 +113,15 @@ public class JsonOECDParser {
 
     private long findIndexOfLabel(String label, JSONObject areaCategoryEntry) {
         JSONObject indexEntry = null;
+        long value = 0;
         try {
-          indexEntry = (JSONObject) areaCategoryEntry.get("index");
+            indexEntry = (JSONObject) areaCategoryEntry.get("index");
+            value = (long) indexEntry.get(label);
         } catch (NullPointerException e) {
             ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
         }
 
-        return (long) indexEntry.get(label);
+        return value;
     }
 
 }

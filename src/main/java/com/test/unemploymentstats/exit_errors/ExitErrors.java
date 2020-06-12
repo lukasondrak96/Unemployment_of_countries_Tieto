@@ -1,5 +1,8 @@
-package exit_errors;
+package com.test.unemploymentstats.exit_errors;
 
+/**
+ * Enum for error codes. Used for exiting.
+ */
 public enum ExitErrors {
 
     NOT_ENOUGH_VALUES(10,
@@ -11,7 +14,7 @@ public enum ExitErrors {
     FILE_READING(22,
             "Error while reading file. Please check if file is in correct Json format (JSON-stat)."),
     MISSING_ATTRIBUTE_IN_FILE(23,
-            "File has not correct structure.");
+            "File has not correct structure, some value or whole attribute is missing.");
 
     private int errorCode;
     private String errorMsg;
