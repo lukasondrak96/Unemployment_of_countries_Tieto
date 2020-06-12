@@ -7,10 +7,13 @@ public class Area {
 
     private String name;
     private String label;
+    private long orderIndex;
     private List<UnemploymentRate> unemploymentRateList;
 
-    public Area(String name) {
+    public Area(String name, String label, long orderIndex) {
         this.name = name;
+        this.label = label;
+        this.orderIndex = orderIndex;
         this.unemploymentRateList = new ArrayList<>();
     }
 
@@ -22,11 +25,24 @@ public class Area {
         return label;
     }
 
+    public long getOrderIndex() {
+        return orderIndex;
+    }
+
     public List<UnemploymentRate> getUnemploymentRateList() {
         return unemploymentRateList;
     }
 
-    public void setUnemploymentRateList(List<UnemploymentRate> unemploymentRateList) {
-        this.unemploymentRateList = unemploymentRateList;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Area: " +
+                "\nname=" + name +
+                "\nlabel=" + label +
+                "\nlist of rates=");
+        for (UnemploymentRate rate : unemploymentRateList) {
+            sb.append("\n\t" + rate.getYear() + " -> "  + rate.getRate());
+        }
+        return sb.toString();
     }
 }

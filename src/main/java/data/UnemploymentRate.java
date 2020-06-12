@@ -1,21 +1,19 @@
 package data;
 
-import java.time.Year;
-
 public class UnemploymentRate {
 
-    private Year year;
-    private float rate;
+    private int year;
+    private double rate;
 
-    public Year getYear() {
+    public int getYear() {
         return year;
     }
 
-    public float getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public UnemploymentRate(Year year, float rate) {
+    public UnemploymentRate(int year, double rate) {
         this.year = year;
         this.rate = rate;
     }
