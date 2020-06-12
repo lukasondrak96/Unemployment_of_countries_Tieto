@@ -10,16 +10,13 @@ import java.net.URLConnection;
 
 public class JsonDownloader {
 
-    JSONParser jsonParser = new JSONParser();
-
-
-    public JSONObject getJsonObjectFromUrl(String urlPath) {
+    public static JSONObject getJsonObjectFromUrl(String urlPath) {
         try {
             URL url = new URL(urlPath);
             URLConnection con = url.openConnection();
             InputStream is = con.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            return (JSONObject) jsonParser.parse(reader);
+            return (JSONObject) new JSONParser().parse(reader);
 
         } catch (FileNotFoundException e) {
             System.err.println("This file cannot be downloaded. Please check if you typed in correct url.");
