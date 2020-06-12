@@ -1,5 +1,6 @@
 package json;
 
+import exit_errors.ExitErrors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -20,7 +21,13 @@ public class JsonRateProvider {
     }
 
     private void fillValuesList() {
-        JSONArray valuesArr = (JSONArray) inputJsonFile.get("value");
+        JSONArray valuesArr = null;
+        try {
+            valuesArr = (JSONArray) inputJsonFile.get("value");
+        } catch (NullPointerException e) {
+            System.err.println(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorMsg());
+            System.exit(ExitErrors.MISSING_ATTRIBUTE_IN_FILE.getErrorCode());
+        }
         Iterator i = valuesArr.iterator();
 
         while (i.hasNext()) {
@@ -29,8 +36,14 @@ public class JsonRateProvider {
         }
     }
 
-    public double provideNextValue() {
-         return valuesList.get(currentValue++);
+    public double provideNextValue() throws NullPointerException {
+        try {
+            return valuesList.get(currentValue++);
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println(ExitErrors.NOT_ENOUGH_VALUES.getErrorMsg());
+            System.exit(ExitErrors.NOT_ENOUGH_VALUES.getErrorCode());
+        }
+        return 0;
     }
 
 }

@@ -41,7 +41,7 @@ public class Area {
                 "\nlabel=" + label +
                 "\nlist of rates=");
         for (UnemploymentRate rate : unemploymentRateList) {
-            sb.append("\n\t" + rate.getYear() + " -> "  + rate.getRate());
+            sb.append("\n\t" + rate.getYear() + " -> " + rate.getRate());
         }
         return sb.toString();
     }
