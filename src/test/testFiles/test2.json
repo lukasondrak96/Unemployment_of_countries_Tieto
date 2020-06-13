@@ -1,0 +1,73 @@
+{
+  "version" : "2.0",
+  "class" : "dataset",
+  "href" : "Test Unemployment data",
+  "label" : "Test Unemployment data",
+  "value" : [
+    5.3,4.2,7.2,8.4,9.1,
+    4.2,7.2,5.3,6.6,4.8,
+    12.2,23.1,16.2,16.1,17.2,
+    3.7,4.4,3.3,4.1,8.1,
+    12.1,13.1,10.1,8.2,4.2
+  ],
+  "id" : ["concept", "area", "year"],
+  "size" : [1, 5, 5],
+  "role" :{
+    "time" : ["year"],
+    "geo" : ["area"],
+    "metric" : ["concept"]
+  },
+  "dimension" : {
+    "concept" : {
+      "label" : "indicator",
+      "extension" : {
+        "definition" : {
+          "UNR" : "Test Unemployment data"
+        }
+      },
+      "category" : {
+        "label" : {
+          "UNR" : "unemployment rate"
+        },
+        "unit" : {
+          "UNR" : {
+            "symbol" : "%",
+            "decimals" : 1
+          }
+        }
+      }
+    },
+
+    "year" : {
+      "label" : "2010-2014",
+      "category" : {
+        "index" : {
+          "2010" : 7,
+          "2011" : 8,
+          "2012" : 9,
+          "2013" : 10,
+          "2014" : 11
+        }
+      }
+    },
+
+    "area" : {
+      "category" : {
+        "index" : {
+          "AU" : 0,
+          "AT" : 1,
+          "BE" : 2,
+          "CA" : 3,
+          "CL" : 4
+        },
+        "label" : {
+          "AU" : "Australia",
+          "AT" : "Austria",
+          "BE" : "Belgium",
+          "CA" : "Canada",
+          "CL" : "Chile"
+        }
+      }
+    }
+  }
+}
