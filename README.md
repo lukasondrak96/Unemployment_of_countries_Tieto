@@ -11,7 +11,7 @@ To run this maven project, use JDK11.
 
 Attributes of program: 
 ```
-    [url, count of printed areas]
+    [url of file, count of printed areas]
 ```
 If attributes are not provided, program will use these default values:
 ```
