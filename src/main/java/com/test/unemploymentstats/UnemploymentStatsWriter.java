@@ -6,6 +6,7 @@ import com.test.unemploymentstats.data.UnemploymentRate;
 import com.test.unemploymentstats.exit_errors.ExitErrors;
 import com.test.unemploymentstats.json_processing.JsonFileDownloader;
 import com.test.unemploymentstats.json_processing.JsonOECDParser;
+import org.apache.log4j.BasicConfigurator;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import org.apache.log4j.Logger;
 import static com.test.unemploymentstats.exit_errors.ExitErrors.*;
 
 /**
@@ -22,6 +23,7 @@ import static com.test.unemploymentstats.exit_errors.ExitErrors.*;
  */
 public class UnemploymentStatsWriter {
 
+    private static final Logger LOGGER = Logger.getLogger(UnemploymentStatsWriter.class);
     private static String URL = "https://json-stat.org/samples/oecd.json";
     private static int areasCountToWrite = 3;
 
@@ -35,8 +37,17 @@ public class UnemploymentStatsWriter {
         this.areaList = new JsonOECDParser(jsonObject).getAreaList();
     }
 
-    private void writeExtremeOfUnemploymentRate(int countOfAreas, ExtremesOfUnemployment extreme) {
-        if (extreme == ExtremesOfUnemployment.HIGHEST) {
+    public UnemploymentStatsWriter(String url) throws IOException, ParseException, NullPointerException, IndexOutOfBoundsException {
+        JSONObject jsonObject = JsonFileDownloader.getJsonObjectFromUrl(url);
+        this.areaList = new JsonOECDParser(jsonObject).getAreaList();
+    }
+
+    public List<Area> getAreaList() {
+        return areaList;
+    }
+
+    public void writeExtremeOfUnemploymentRate(int countOfAreas, ExtremesOfUnemployment extreme) {
+        if (extreme == ExtremesOfUnemployment.LOWEST) {
             writeLowestUnemploymentRates(countOfAreas);
         } else {
             writeHighestUnemploymentRates(countOfAreas);
@@ -113,42 +124,52 @@ public class UnemploymentStatsWriter {
         System.out.println(sb);
     }
 
-    private enum ExtremesOfUnemployment {
+    public enum ExtremesOfUnemployment {
         HIGHEST,
         LOWEST
     }
 
     public static void main(String[] args) {
+        BasicConfigurator.configure();
+
         if (args.length == 2) {
             URL = args[0];
             try {
                 areasCountToWrite = Integer.parseInt(args[1]);
                 if(areasCountToWrite < 1) {
+                    LOGGER.error("Wrong areasCount argument: " + args[1]);
                     ExitErrors.exitWithErrCode(WRONG_ARGUMENTS);
                 }
             } catch (NumberFormatException e) {
+                LOGGER.error("Wrong areasCount argument: " + args[1]);
                 ExitErrors.exitWithErrCode(WRONG_ARGUMENTS);
             }
         } else if (args.length != 0) {
+            LOGGER.error("Wrong count of arguments. " + args.length + " arguments used.");
             ExitErrors.exitWithErrCode(WRONG_ARGUMENTS);
         }
 
-        UnemploymentStatsWriter writer = null;
+        UnemploymentStatsWriter writer;
         try {
             writer = new UnemploymentStatsWriter();
+            writer.writeExtremeOfUnemploymentRate(areasCountToWrite, ExtremesOfUnemployment.HIGHEST);
+            writer.writeExtremeOfUnemploymentRate(areasCountToWrite, ExtremesOfUnemployment.LOWEST);
         } catch (IndexOutOfBoundsException e) {
+            LOGGER.error(e);
             ExitErrors.exitWithErrCode(NOT_ENOUGH_VALUES);
         } catch (NullPointerException e) {
+            LOGGER.error(e);
             ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
         } catch (FileNotFoundException e) {
+            LOGGER.error(e);
             ExitErrors.exitWithErrCode(FILE_NOT_FOUND);
         } catch (ParseException e) {
+            LOGGER.error(e);
             ExitErrors.exitWithErrCode(FILE_PARSING);
         } catch (IOException e) {
+            LOGGER.error(e);
             ExitErrors.exitWithErrCode(FILE_READING);
         }
 
-        writer.writeExtremeOfUnemploymentRate(areasCountToWrite, ExtremesOfUnemployment.HIGHEST);
-        writer.writeExtremeOfUnemploymentRate(areasCountToWrite, ExtremesOfUnemployment.LOWEST);
     }
 }

@@ -16,7 +16,7 @@ public class JsonFileDownloader {
     /**
      * Downloads file and parse it to JSONObject.
      *
-     * @param urlPath url path to com.test.unemploymentstats.json file
+     * @param urlPath url path to json file
      * @return created JSONObject
      */
     public static JSONObject getJsonObjectFromUrl(String urlPath) throws IOException, ParseException {
