@@ -48,16 +48,40 @@ public class Area {
         return unemploymentRateList;
     }
 
+    public void setUnemploymentRateList(List<UnemploymentRate> unemploymentRateList) {
+        this.unemploymentRateList = unemploymentRateList;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Area: " +
-                "\nname=" + name +
-                "\nlabel=" + areaCode +
-                "\nlist of rates=");
+                "\nname: " + name +
+                "\nlabel: " + areaCode +
+                "\nlist of rates: ");
         for (UnemploymentRate rate : unemploymentRateList) {
             sb.append("\n\t" + rate.getYear() + " -> " + rate.getRate());
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null || obj.getClass() != this.getClass())
+            return false;
+
+        Area other = (Area) obj;
+
+        if (other.getName().equals(this.name) &&
+                (other.getAreaCode().equals(this.areaCode) &&
+                other.getOrderIndex() == this.orderIndex &&
+                other.getUnemploymentRateList().equals(this.getUnemploymentRateList())
+        ))
+            return true;
+
+        return false;
     }
 }

@@ -27,4 +27,19 @@ public class UnemploymentRate {
         this.year = year;
         this.rate = rate;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null || obj.getClass() != this.getClass())
+            return false;
+
+        UnemploymentRate other = (UnemploymentRate) obj;
+        if (other.getRate() == this.rate && other.getYear() == this.year)
+            return true;
+
+        return false;
+    }
 }
