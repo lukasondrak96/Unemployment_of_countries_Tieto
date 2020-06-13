@@ -14,7 +14,10 @@ public enum ExitErrors {
     FILE_READING(22,
             "Error while reading file. Please check if file is in correct Json format (JSON-stat)."),
     MISSING_ATTRIBUTE_IN_FILE(23,
-            "File has not correct structure, some value or whole attribute is missing.");
+            "File has not correct structure, some value or whole attribute is missing."),
+    WRONG_ARGUMENTS(101,
+            "Wrong input arguments. Please use two arguments or none (program has default values)." +
+                    "\nUsage: [json file url] [count of extreme unemployment rates of areas to write out]");
 
     private int errorCode;
     private String errorMsg;
@@ -32,6 +35,10 @@ public enum ExitErrors {
         return errorMsg;
     }
 
+    /**
+     * Exits program with given exit error
+     * @param error
+     */
     public static void exitWithErrCode(ExitErrors error) {
         System.err.println(error.getErrorMsg());
         System.exit(error.getErrorCode());

@@ -22,8 +22,8 @@ import static com.test.unemploymentstats.exit_errors.ExitErrors.*;
  */
 public class UnemploymentStatsWriter {
 
-    private static final String URL = "https://json-stat.org/samples/oecd.json";
-    private static final int COUNT_OF_AREAS_TO_WRITE = 3;
+    private static String URL = "https://json-stat.org/samples/oecd.json";
+    private static int areasCountToWrite = 3;
 
     /**
      * List of areas with rates
@@ -119,6 +119,20 @@ public class UnemploymentStatsWriter {
     }
 
     public static void main(String[] args) {
+        if (args.length == 2) {
+            URL = args[0];
+            try {
+                areasCountToWrite = Integer.parseInt(args[1]);
+                if(areasCountToWrite < 1) {
+                    ExitErrors.exitWithErrCode(WRONG_ARGUMENTS);
+                }
+            } catch (NumberFormatException e) {
+                ExitErrors.exitWithErrCode(WRONG_ARGUMENTS);
+            }
+        } else if (args.length != 0) {
+            ExitErrors.exitWithErrCode(WRONG_ARGUMENTS);
+        }
+
         UnemploymentStatsWriter writer = null;
         try {
             writer = new UnemploymentStatsWriter();
@@ -134,7 +148,7 @@ public class UnemploymentStatsWriter {
             ExitErrors.exitWithErrCode(FILE_READING);
         }
 
-        writer.writeExtremeOfUnemploymentRate(COUNT_OF_AREAS_TO_WRITE, ExtremesOfUnemployment.HIGHEST);
-        writer.writeExtremeOfUnemploymentRate(COUNT_OF_AREAS_TO_WRITE, ExtremesOfUnemployment.LOWEST);
+        writer.writeExtremeOfUnemploymentRate(areasCountToWrite, ExtremesOfUnemployment.HIGHEST);
+        writer.writeExtremeOfUnemploymentRate(areasCountToWrite, ExtremesOfUnemployment.LOWEST);
     }
 }
