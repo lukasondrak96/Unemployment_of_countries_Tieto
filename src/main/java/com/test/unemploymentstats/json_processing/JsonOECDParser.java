@@ -2,12 +2,9 @@ package com.test.unemploymentstats.json_processing;
 
 import com.test.unemploymentstats.data.Area;
 import com.test.unemploymentstats.data.UnemploymentRate;
-import com.test.unemploymentstats.exit_errors.ExitErrors;
 import org.json.simple.JSONObject;
 
 import java.util.*;
-
-import static com.test.unemploymentstats.exit_errors.ExitErrors.*;
 
 /**
  * Parser of oecd file with com.test.unemploymentstats.json-stat format. Creates inner structure of areas and their rates in years.
@@ -25,7 +22,7 @@ public class JsonOECDParser {
     private List<Area> areaList;
     private final static String NO_AREAS_IN_FILE = "No areas in input file.";
 
-    public JsonOECDParser(JSONObject jsonFile) {
+    public JsonOECDParser(JSONObject jsonFile) throws NullPointerException, IndexOutOfBoundsException {
         this.jsonFile = jsonFile;
         createListEntries();
     }
@@ -34,13 +31,13 @@ public class JsonOECDParser {
         return areaList;
     }
 
-    private void createListEntries() {
+    private void createListEntries() throws NullPointerException, IndexOutOfBoundsException {
         areaList = new ArrayList<>();
         JSONObject dimensionEntry = null;
         try {
             dimensionEntry = (JSONObject) jsonFile.get("dimension");
         } catch (NullPointerException e) {
-            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
+            throw new NullPointerException();
         }
 
         createAreas(dimensionEntry);
@@ -56,24 +53,24 @@ public class JsonOECDParser {
         }
     }
 
-    private void createAreas(JSONObject dimensionEntry) {
+    private void createAreas(JSONObject dimensionEntry) throws NullPointerException {
         JSONObject areaCategoryEntry = null;
 
         try {
             JSONObject areaEntry = (JSONObject) dimensionEntry.get("area");
             areaCategoryEntry = (JSONObject) areaEntry.get("category");
         } catch (NullPointerException e) {
-            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
+            throw new NullPointerException();
         }
         retrieveAreasFromCategory(areaCategoryEntry);
     }
 
-    private void retrieveAreasFromCategory(JSONObject areaCategoryEntry) {
+    private void retrieveAreasFromCategory(JSONObject areaCategoryEntry) throws NullPointerException {
         JSONObject areaLabelEntry = null;
         try {
             areaLabelEntry = (JSONObject) areaCategoryEntry.get("label");
         } catch (NullPointerException e) {
-            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
+            throw new NullPointerException();
         }
 
         final JSONObject finalAreaLabelEntry = areaLabelEntry;
@@ -89,14 +86,14 @@ public class JsonOECDParser {
         });
     }
 
-    private void fillAreaUnemploymentRates(JSONObject dimensionEntry) {
+    private void fillAreaUnemploymentRates(JSONObject dimensionEntry) throws NullPointerException, IndexOutOfBoundsException {
         JSONObject indexEntry = null;
         try {
             JSONObject yearEntry = (JSONObject) dimensionEntry.get("year");
             JSONObject yearCategoryEntry = (JSONObject) yearEntry.get("category");
             indexEntry = (JSONObject) yearCategoryEntry.get("index");
         } catch (NullPointerException e) {
-            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
+            throw new NullPointerException();
         }
 
         JsonRateProvider rateProvider = new JsonRateProvider(jsonFile);
@@ -111,14 +108,14 @@ public class JsonOECDParser {
         }
     }
 
-    private long findIndexOfLabel(String label, JSONObject areaCategoryEntry) {
+    private long findIndexOfLabel(String label, JSONObject areaCategoryEntry) throws NullPointerException {
         JSONObject indexEntry = null;
         long value = 0;
         try {
             indexEntry = (JSONObject) areaCategoryEntry.get("index");
             value = (long) indexEntry.get(label);
         } catch (NullPointerException e) {
-            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
+            throw new NullPointerException();
         }
 
         return value;

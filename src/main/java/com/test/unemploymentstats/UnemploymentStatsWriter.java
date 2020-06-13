@@ -3,13 +3,19 @@ package com.test.unemploymentstats;
 import com.test.unemploymentstats.data.Area;
 
 import com.test.unemploymentstats.data.UnemploymentRate;
+import com.test.unemploymentstats.exit_errors.ExitErrors;
 import com.test.unemploymentstats.json_processing.JsonFileDownloader;
 import com.test.unemploymentstats.json_processing.JsonOECDParser;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.test.unemploymentstats.exit_errors.ExitErrors.*;
 
 /**
  * Main class - writer of stats of unemployemnt rate in areas.
@@ -24,7 +30,7 @@ public class UnemploymentStatsWriter {
      */
     private List<Area> areaList;
 
-    public UnemploymentStatsWriter() {
+    public UnemploymentStatsWriter() throws IOException, ParseException, NullPointerException, IndexOutOfBoundsException {
         JSONObject jsonObject = JsonFileDownloader.getJsonObjectFromUrl(URL);
         this.areaList = new JsonOECDParser(jsonObject).getAreaList();
     }
@@ -112,9 +118,22 @@ public class UnemploymentStatsWriter {
         LOWEST
     }
 
-
     public static void main(String[] args) {
-        UnemploymentStatsWriter writer = new UnemploymentStatsWriter();
+        UnemploymentStatsWriter writer = null;
+        try {
+            writer = new UnemploymentStatsWriter();
+        } catch (IndexOutOfBoundsException e) {
+            ExitErrors.exitWithErrCode(NOT_ENOUGH_VALUES);
+        } catch (NullPointerException e) {
+            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
+        } catch (FileNotFoundException e) {
+            ExitErrors.exitWithErrCode(FILE_NOT_FOUND);
+        } catch (ParseException e) {
+            ExitErrors.exitWithErrCode(FILE_PARSING);
+        } catch (IOException e) {
+            ExitErrors.exitWithErrCode(FILE_READING);
+        }
+
         writer.writeExtremeOfUnemploymentRate(COUNT_OF_AREAS_TO_WRITE, ExtremesOfUnemployment.HIGHEST);
         writer.writeExtremeOfUnemploymentRate(COUNT_OF_AREAS_TO_WRITE, ExtremesOfUnemployment.LOWEST);
     }

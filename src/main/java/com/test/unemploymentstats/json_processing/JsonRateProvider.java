@@ -1,13 +1,10 @@
 package com.test.unemploymentstats.json_processing;
 
-import com.test.unemploymentstats.exit_errors.ExitErrors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-
-import static com.test.unemploymentstats.exit_errors.ExitErrors.*;
 
 /**
  * Provides values of unemployment rates.
@@ -38,21 +35,20 @@ public class JsonRateProvider {
      * Provides value of list and moves to next.
      * @return value
      */
-    public double provideNextValue() {
+    public double provideNextValue() throws IndexOutOfBoundsException {
         try {
             return valuesList.get(currentIndex++);
         } catch (IndexOutOfBoundsException e) {
-            ExitErrors.exitWithErrCode(NOT_ENOUGH_VALUES);
+            throw new IndexOutOfBoundsException();
         }
-        return 0;
     }
 
-    private void fillValuesList() {
+    private void fillValuesList() throws NullPointerException {
         JSONArray valuesArr = null;
         try {
             valuesArr = (JSONArray) inputJsonFile.get("value");
         } catch (NullPointerException e) {
-            ExitErrors.exitWithErrCode(MISSING_ATTRIBUTE_IN_FILE);
+            throw new NullPointerException();
         }
 
         if(valuesArr.size() == 0) {
