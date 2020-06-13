@@ -15,6 +15,6 @@ Attributes of program:
 ```
 If attributes are not provided, program will use these default values:
 ```
-    file of url: https://json-stat.org/samples/oecd.json
+    url of file: https://json-stat.org/samples/oecd.json
     count of printed areas: 3
 ```
